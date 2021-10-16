@@ -65,6 +65,8 @@
                     </span>
                 </div>
             </div>
+            <div class="row g-2 align-items-center mb-4 ms-2 ps-4 d-none" id="tolerableLossAmount">
+            </div>
             <div class="row g-2 align-items-center mb-4">
                 <div class="col-auto">
                     <label for="noOfShares" class="col-form-label">* No. of shares</label>
@@ -109,6 +111,23 @@
         integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script>
         $('form').on('submit', formChangeHandler);
+
+        $('#percentageToRisk').on('keyup', handleTolerableLoss);
+        $('#capital').on('keyup', handleTolerableLoss);
+
+        function handleTolerableLoss(e) {
+            e.preventDefault();
+            const percentageToRisk = $('#percentageToRisk').val() || 0;
+            const capital = $('#capital').val() || 0;
+
+            if (!isNaN(percentageToRisk) && !isNaN(capital)) {
+                const tolerableLoss = percentageToRisk * capital / 100;
+                $('#tolerableLossAmount').removeClass('d-none');
+                $('#tolerableLossAmount').html(
+                    `${percentageToRisk}% x $${capital} = <strong class="w-auto m-0">$${tolerableLoss.toFixed(2)}</strong> is your Tolerable loss.`
+                );
+            }
+        }
 
         function formChangeHandler(e) {
             e.preventDefault();
